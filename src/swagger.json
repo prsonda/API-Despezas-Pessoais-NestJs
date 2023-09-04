@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Despesas Pessoais",
+    "version": "1.0.0",
+    "description": "API para gerenciamento de despesas pessoais",
+    "contact": { "name": "", "email": "" }
+  },
+  "servers": [
+    {
+      "url": "https://",
+      "description": "Prefixo das rotas para teste"
+    }
+  ],
+  "schemes": ["https"],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "https",
+        "scheme": "bearer",
+        "bearerFormat": "jwt",
+        "description": "Digite o token adquirido na rota `login`, exemplo: `abcde12345i5ets1254fdsacarft66fa`"
+      }
+    }
+  },
+  "paths": {},
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Rotas de autenticação"
+    },
+    {
+      "name": "Users",
+      "description": "Rotas de usuários"
+    },
+    {
+      "name": "Categories",
+      "description": "Rotas de categorias"
+    },
+    {
+      "name": "Transaction type",
+      "description": "Rotas de tipos de transações"
+    },
+    {
+      "name": "Transactions",
+      "description": "Rotas de despesas"
+    }
+  ]
+}
