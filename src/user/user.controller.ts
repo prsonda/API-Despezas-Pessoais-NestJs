@@ -6,7 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Res,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Response } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -16,8 +19,17 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @ApiOperation({
+    summary: 'Create a user',
+    description: 'Create a user',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'The user has been successfully created.',
+    type: CreateUserDto,
+  })
+  create(@Body() createUserDto: CreateUserDto, @Res() response: Response) {
+    return this.userService.create(createUserDto, response);
   }
 
   @Get()

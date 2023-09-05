@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 
 describe('UserService', () => {
@@ -18,7 +19,7 @@ describe('UserService', () => {
 
   describe('create', () => {
     it('should create a user', async () => {
-      const userData = {
+      const userData: CreateUserDto = {
         name: 'Test User',
         email: 'email@email.com',
         password: 'password123',
@@ -28,9 +29,6 @@ describe('UserService', () => {
           location: 'https://example.com/avatar.png',
           key: 'avatar.png',
         },
-        active: true,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       };
 
       const createdUser = {
@@ -39,13 +37,23 @@ describe('UserService', () => {
         password: 'hashedPassword',
       };
 
+      const req = userData;
+
+      const res = {
+        status: jest.fn(() => res),
+        json: jest.fn(() => res),
+      } as any;
+
       jest.spyOn(service, 'create').mockResolvedValue(createdUser as any);
 
-      const result = await service.create(userData);
+      await service.create(req, res);
 
-      expect(result).toEqual(createdUser);
-      expect(service.create).toHaveBeenCalledWith(userData);
-      expect(result.password).not.toEqual(userData.password);
+      expect(service.create).toHaveBeenCalledWith(userData, res);
+      expect(createdUser.id).toEqual(1);
+      expect(createdUser.name).toEqual('Test User');
+      expect(createdUser.email).toEqual(userData.email);
+      expect(createdUser.password).toEqual('hashedPassword');
+      expect(createdUser.avatar).toEqual(userData.avatar);
     });
   });
 

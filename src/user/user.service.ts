@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { Response } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -7,7 +8,7 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
+  create(createUserDto: CreateUserDto, response: Response) {
     const { avatar, ...dataUser } = createUserDto;
 
     const avatarData = {
@@ -21,6 +22,18 @@ export class UserService {
       ...dataUser,
       avatar: avatarData,
     };
+
+    const userExists = prisma.users.findUnique({
+      where: {
+        email: userData.email,
+      },
+    });
+
+    if (userExists) {
+      return response.status(409).json({
+        message: 'User already exists',
+      });
+    }
 
     return prisma.users.create({
       data: userData,
