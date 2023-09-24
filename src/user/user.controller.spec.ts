@@ -43,7 +43,7 @@ describe('UserController', () => {
 
       await controller.create(req, res);
 
-      expect(userService.create).toHaveBeenCalledWith(userData, res);
+      expect(userService.create).toHaveBeenCalledWith(userData);
       expect(createdUser.id).toEqual(1);
       expect(createdUser.name).toEqual('Test User');
       expect(createdUser.email).toEqual(userData.email);
@@ -123,12 +123,6 @@ describe('UserController', () => {
 
       expect(result).toEqual(user);
       expect(userService.findOne).toHaveBeenCalledWith(1);
-
-      expect(result.id).toEqual(1);
-
-      expect(result.name).toEqual('Test User');
-      expect(result.email).toEqual(user.email);
-      expect(result.password).toEqual(user.password);
     });
   });
 
@@ -166,7 +160,6 @@ describe('UserController', () => {
 
       expect(result).toEqual(updatedUser);
       expect(userService.update).toHaveBeenCalledWith(1, updatedUser);
-      expect(result.name).toEqual('Test User Updated');
     });
   });
 
@@ -194,7 +187,6 @@ describe('UserController', () => {
 
       expect(result).toEqual(user);
       expect(userService.remove).toHaveBeenCalledWith(user.id);
-      expect(result.id).toEqual(user.id);
     });
   });
 });

@@ -10,11 +10,10 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
-import errorService from 'src/utilities/errorService';
+import errorService from '../utilities/errorService';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
-
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

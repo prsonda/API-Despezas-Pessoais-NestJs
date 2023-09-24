@@ -41,9 +41,9 @@ describe('UserService', () => {
 
       jest.spyOn(service, 'create').mockResolvedValue(createdUser as any);
 
-      await service.create(req, res);
+      await service.create(req);
 
-      expect(service.create).toHaveBeenCalledWith(userData, res);
+      expect(service.create).toHaveBeenCalledWith(userData);
       expect(createdUser.id).toEqual(1);
       expect(createdUser.name).toEqual('Test User');
       expect(createdUser.email).toEqual(userData.email);
@@ -123,12 +123,6 @@ describe('UserService', () => {
 
       expect(result).toEqual(user);
       expect(service.findOne).toHaveBeenCalledWith(1);
-
-      expect(result.id).toEqual(1);
-
-      expect(result.name).toEqual('Test User');
-      expect(result.email).toEqual(user.email);
-      expect(result.password).toEqual(user.password);
     });
   });
 
@@ -161,7 +155,6 @@ describe('UserService', () => {
 
       expect(result).toEqual(updatedUser);
       expect(service.update).toHaveBeenCalledWith(1, updatedUser);
-      expect(result.name).toEqual('Test User Updated');
     });
   });
 
@@ -189,7 +182,6 @@ describe('UserService', () => {
 
       expect(result).toEqual(user);
       expect(service.remove).toHaveBeenCalledWith(user.id);
-      expect(result.id).toEqual(user.id);
     });
   });
 });
