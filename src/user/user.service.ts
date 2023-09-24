@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 import { Response } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,7 +12,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto, response: Response) {
     const { avatar, ...dataUser } = createUserDto;
 
-    const avatarData = {};
+    const passwordHash = await bcrypt.hash(dataUser.password, 10);
 
     const userExists = await prisma.users.findUnique({
       where: {
@@ -26,37 +27,43 @@ export class UserService {
     }
 
     return await prisma.users.create({
-      data: dataUser,
+      data: {
+        ...dataUser,
+        password: passwordHash,
+      },
     });
   }
 
   async findAll() {
-    return prisma.users.findMany();
+    return await prisma.users.findMany();
   }
 
   async findOne(id: number) {
-    return prisma.users.findUnique({
+    return await prisma.users.findUnique({
       where: {
         id: id,
       },
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const { avatar, ...dataUser } = updateUserDto;
 
-    const avatarData = {};
+    const passwordHash = await bcrypt.hash(dataUser.password, 10);
 
-    return prisma.users.update({
+    return await prisma.users.update({
       where: {
         id: id,
       },
-      data: dataUser,
+      data: {
+        ...dataUser,
+        password: passwordHash,
+      },
     });
   }
 
-  remove(id: number) {
-    return prisma.users.delete({
+  async remove(id: number) {
+    return await prisma.users.delete({
       where: {
         id: id,
       },
