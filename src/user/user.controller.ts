@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Response } from 'express';
+import errorService from 'src/utilities/errorService';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -28,8 +29,21 @@ export class UserController {
     description: 'The user has been successfully created.',
     type: CreateUserDto,
   })
-  create(@Body() createUserDto: CreateUserDto, @Res() response: Response) {
-    return this.userService.create(createUserDto, response);
+  async create(
+    @Body() createUserDto: CreateUserDto,
+    @Res() response: Response,
+  ) {
+    try {
+      const user = await this.userService.create(createUserDto);
+
+      response.status(201).json(user);
+    } catch (error) {
+      const newError = errorService.responseError(error);
+
+      return response
+        .status(newError.status)
+        .json({ message: newError.message });
+    }
   }
 
   @Get()

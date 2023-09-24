@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
-import { Response } from 'express';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -9,29 +8,33 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class UserService {
-  async create(createUserDto: CreateUserDto, response: Response) {
-    const { avatar, ...dataUser } = createUserDto;
+  async create(createUserDto: CreateUserDto) {
+    try {
+      const { avatar, ...dataUser } = createUserDto;
 
-    const passwordHash = await bcrypt.hash(dataUser.password, 10);
+      const passwordHash = await bcrypt.hash(dataUser.password, 10);
 
-    const userExists = await prisma.users.findUnique({
-      where: {
-        email: dataUser.email,
-      },
-    });
-
-    if (userExists) {
-      return response.status(409).json({
-        message: 'User already exists',
+      const userExists = await prisma.users.findUnique({
+        where: {
+          email: dataUser.email,
+        },
       });
-    }
 
-    return await prisma.users.create({
-      data: {
-        ...dataUser,
-        password: passwordHash,
-      },
-    });
+      if (userExists) {
+        throw new Error('409: Usuário já cadastrado!');
+      }
+
+      const user = await prisma.users.create({
+        data: {
+          ...dataUser,
+          password: passwordHash,
+        },
+      });
+
+      return user;
+    } catch (error) {
+      throw new Error(error.message || 'Erro ao criar usuário!');
+    }
   }
 
   async findAll() {
@@ -39,6 +42,18 @@ export class UserService {
   }
 
   async findOne(id: number) {
+    const userExists = await prisma.users.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!userExists) {
+      return {
+        message: 'User not found',
+      };
+    }
+
     return await prisma.users.findUnique({
       where: {
         id: id,
@@ -49,9 +64,21 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto) {
     const { avatar, ...dataUser } = updateUserDto;
 
+    const userExists = await prisma.users.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!userExists) {
+      return {
+        message: 'User not found',
+      };
+    }
+
     const passwordHash = await bcrypt.hash(dataUser.password, 10);
 
-    return await prisma.users.update({
+    await prisma.users.update({
       where: {
         id: id,
       },
@@ -60,13 +87,29 @@ export class UserService {
         password: passwordHash,
       },
     });
+
+    return;
   }
 
   async remove(id: number) {
-    return await prisma.users.delete({
+    const userExists = await prisma.users.findUnique({
       where: {
         id: id,
       },
     });
+
+    if (!userExists) {
+      return {
+        message: 'User not found',
+      };
+    }
+
+    await prisma.users.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return;
   }
 }
