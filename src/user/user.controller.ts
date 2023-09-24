@@ -20,12 +20,12 @@ export class UserController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create a user',
-    description: 'Create a user',
+    summary: 'Cadastro de usuário',
+    description: 'Cria um novo usuário',
   })
   @ApiResponse({
     status: 201,
-    description: 'The user has been successfully created.',
+    description: 'Usuário criado com sucesso',
     type: CreateUserDto,
   })
   async create(
