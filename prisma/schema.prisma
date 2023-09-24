@@ -15,12 +15,26 @@ model users {
   name                  String
   email                 String  @unique
   password              String
-  avatar                Json?
   atcive                Boolean @default(true)
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
+  api_token             api_token[]
   transactions          transactions[]
+  Avatar                Avatar[]
+}
+
+model Avatar {
+  id                    Int     @id @default(autoincrement())
+  users_id              Int
+  location              String
+  name                  String
+  size                  Int
+  key                   String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  users   users   @relation(fields: [users_id], references: [id])
 }
 
 model categories {
@@ -59,6 +73,20 @@ model transactions {
   categories   categories   @relation(fields: [categoriesId], references: [id])
 
   types   transaction_type   @relation(fields: [typeId], references: [id])
+}
+
+model api_token {
+  id                    Int     @id @default(autoincrement())
+  userId                Int
+  name                  String
+  token                 String
+  lastUsedAt            DateTime
+  usedCount             Int
+  lastUsedAllowed       DateTime
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  users   users   @relation(fields: [userId], references: [id])
 }
 
 

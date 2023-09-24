@@ -23,12 +23,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @MinLength(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
   password: string;
 
-  avatar: {
-    location?: string;
-    name?: string;
-    size?: number;
-    key?: string;
-  };
+  avatar: string;
 
   @IsBoolean({ message: 'Ativo deve ser um booleano' })
   active: boolean;

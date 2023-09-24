@@ -21,10 +21,5 @@ export class CreateUserDto {
   @ApiProperty({
     example: 'Arquivo de imagem do usuário',
   })
-  avatar: {
-    location?: string;
-    name?: string;
-    size?: number;
-    key?: string;
-  };
+  avatar: string;
 }

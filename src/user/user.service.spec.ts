@@ -23,12 +23,7 @@ describe('UserService', () => {
         name: 'Test User',
         email: 'email@email.com',
         password: 'password123',
-        avatar: {
-          name: 'avatar.png',
-          size: 1234,
-          location: 'https://example.com/avatar.png',
-          key: 'avatar.png',
-        },
+        avatar: 'https://example.com/avatar.png',
       };
 
       const createdUser = {
@@ -134,7 +129,6 @@ describe('UserService', () => {
       expect(result.name).toEqual('Test User');
       expect(result.email).toEqual(user.email);
       expect(result.password).toEqual(user.password);
-      expect(result.avatar).toEqual(user.avatar);
     });
   });
 
@@ -145,12 +139,7 @@ describe('UserService', () => {
         name: 'Test User',
         email: 'email@email.com',
         password: 'hashedPassword',
-        avatar: {
-          name: 'avatar.png',
-          size: 1234,
-          location: 'https://example.com/avatar.png',
-          key: 'avatar.png',
-        },
+        avatar: 'https://example.com/avatar.png',
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -161,12 +150,7 @@ describe('UserService', () => {
         name: 'Test User Updated',
         email: 'email@email.com',
         password: 'hashedPassword',
-        avatar: {
-          name: 'avatar.png',
-          size: 1234,
-          location: 'https://example.com/avatar.png',
-          key: 'avatar.png',
-        },
+        avatar: 'https://example.com/avatar.png',
         active: false,
         updatedAt: new Date(),
       };

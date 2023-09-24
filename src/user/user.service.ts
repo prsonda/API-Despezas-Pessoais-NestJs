@@ -8,24 +8,14 @@ const prisma = new PrismaClient();
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto, response: Response) {
+  async create(createUserDto: CreateUserDto, response: Response) {
     const { avatar, ...dataUser } = createUserDto;
 
-    const avatarData = {
-      location: avatar?.location || '',
-      name: avatar?.name || '',
-      size: avatar?.size || 0,
-      key: avatar?.key || '',
-    };
+    const avatarData = {};
 
-    const userData = {
-      ...dataUser,
-      avatar: avatarData,
-    };
-
-    const userExists = prisma.users.findUnique({
+    const userExists = await prisma.users.findUnique({
       where: {
-        email: userData.email,
+        email: dataUser.email,
       },
     });
 
@@ -35,16 +25,16 @@ export class UserService {
       });
     }
 
-    return prisma.users.create({
-      data: userData,
+    return await prisma.users.create({
+      data: dataUser,
     });
   }
 
-  findAll() {
+  async findAll() {
     return prisma.users.findMany();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return prisma.users.findUnique({
       where: {
         id: id,
@@ -55,23 +45,13 @@ export class UserService {
   update(id: number, updateUserDto: UpdateUserDto) {
     const { avatar, ...dataUser } = updateUserDto;
 
-    const avatarData = {
-      location: avatar?.location || '',
-      name: avatar?.name || '',
-      size: avatar?.size || 0,
-      key: avatar?.key || '',
-    };
-
-    const userData = {
-      ...dataUser,
-      avatar: avatarData,
-    };
+    const avatarData = {};
 
     return prisma.users.update({
       where: {
         id: id,
       },
-      data: userData,
+      data: dataUser,
     });
   }
 
